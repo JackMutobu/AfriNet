@@ -1,9 +1,8 @@
-﻿using LanguageExt;
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 
-namespace AfriNetConsoleTest
+namespace AfriNetRouterLib
 {
-    public static class PlaywrightExtensions
+    internal static class PlaywrightExtensions
     {
         public static async Task<T> InitializePlaywrightAsync<T>(this string initialUrl, Func<IPage,Task<T>> action)
         {

@@ -1,10 +1,10 @@
-﻿using AfriNetConsoleTest.Models;
+﻿using AfriNetRouterLib.Models;
 using HtmlAgilityPack;
 using Microsoft.Playwright;
 
-namespace AfriNetConsoleTest
+namespace AfriNetRouterLib.Extensions.Version09104
 {
-    public static class RouterExtensions
+    internal static class RouterExtensions
     {
         public static TryAsync<string> GetPageTitle(this IPage page)
         => TryAsync(async () =>
@@ -62,6 +62,9 @@ namespace AfriNetConsoleTest
             var devices = new List<WireLessLiveDevice>();
             var cells = table.SelectNodes("//td");
 
+            if(cells is null)
+                return Enumerable.Empty<WireLessLiveDevice>();
+
             for (int skip = 0; skip < cells.Count; skip += 6)
             {
                 var cellsToProcess = cells.Skip(skip).Take(6).ToList();
@@ -71,7 +74,7 @@ namespace AfriNetConsoleTest
                 var receivedPackets = cellsToProcess[3].InnerText;
                 var sentPackets = cellsToProcess[4].InnerText;
                 var ssid = cellsToProcess[5].InnerText;
-                devices.Add(new WireLessLiveDevice(id, macAddress, receivedPackets, sentPackets, ssid) { Status = DeviceStatus.Online });
+                devices.Add(new WireLessLiveDevice(id, macAddress, receivedPackets, sentPackets, ssid) { LiveStatus = currentStatus });
             }
 
             return devices.AsEnumerable();
@@ -145,6 +148,9 @@ namespace AfriNetConsoleTest
             var devices = new List<MacFilteredWirelessDevice>();
             var cells = table.SelectNodes("//td");
 
+            if (cells is null)
+                return Enumerable.Empty<MacFilteredWirelessDevice>();
+
             for (int skip = 0; skip < cells.Count; skip += 6)
             {
                 var cellsToProcess = cells.Skip(skip).Take(6).ToList();
@@ -166,6 +172,11 @@ namespace AfriNetConsoleTest
         => TryAsync(async () =>
         {
             var mainFrame = await GotToFilteringPage(page, filterPageselectors);
+
+            var isDeviceBlocked = await IsDeviceBlocked(mainFrame!, macAdress);
+            if (isDeviceBlocked)
+                return page;
+
             await mainFrame!.GetByText("Add New").ClickAsync();
 
             filterPageselectors.macFilteringPageSampleElement = "#con";
@@ -183,5 +194,36 @@ namespace AfriNetConsoleTest
 
             return page;
         });
+
+        public static TryAsync<IPage> UnblockDeviceInMacFilteringTable(this IPage page, string macAdress, (string menuFrame, string menu, string subMenu, string macFilteringPageSampleElement, string macFilteringEnabledSpan, string enableButtonFrame, string enableButton, string tableContainer) selectors, string deleteButtonSelector)
+         => page.GoToWirelessBandMacFiltering((selectors.menuFrame, selectors.menu, selectors.subMenu, selectors.macFilteringPageSampleElement, selectors.macFilteringEnabledSpan, selectors.enableButtonFrame, selectors.enableButton))
+            .Bind(page => page.DeleDeviceFromMacFilteringTable(macAdress, (selectors.menuFrame, selectors.menu, selectors.subMenu, selectors.macFilteringPageSampleElement, selectors.macFilteringEnabledSpan, selectors.enableButtonFrame, selectors.enableButton), deleteButtonSelector));
+
+        private static TryAsync<IPage> DeleDeviceFromMacFilteringTable(this IPage page, string macAdress, (string menuFrame, string menu, string subMenu, string macFilteringPageSampleElement, string macFilteringEnabledSpan, string enableButtonFrame, string enableButton) filterPageselectors, string deleteButtonSelector)
+        => TryAsync(async () =>
+        {
+            var mainFrame = await GotToFilteringPage(page, filterPageselectors);
+            var isDeviceBlocked = await IsDeviceBlocked(mainFrame!,macAdress);
+
+            if (!isDeviceBlocked)
+                return page;
+
+            var checkBoxId = await mainFrame!.Locator("tr", new FrameLocatorOptions() { Has = mainFrame.Locator($"td:text('{macAdress}')") }).GetByRole(AriaRole.Checkbox).GetAttributeAsync("id");
+
+            await mainFrame.ClickAsync($"#{checkBoxId!}");
+
+            await Task.Delay(100);//wait for buttons to be enabled
+
+            await mainFrame!.GetByText(deleteButtonSelector).ClickAsync();
+
+            return page;
+        });
+
+        private static async Task<bool> IsDeviceBlocked(this IFrame frame, string macAdress)
+        {
+            var isBlocked = await frame!.Locator("tr", new FrameLocatorOptions() { Has = frame.Locator($"td:text('{macAdress}')") }).IsVisibleAsync();
+
+            return isBlocked;
+        }
     }
 }

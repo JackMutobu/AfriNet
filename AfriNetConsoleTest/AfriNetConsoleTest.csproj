@@ -8,9 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.49" />
-    <PackageReference Include="LanguageExt.Core" Version="4.4.3" />
-    <PackageReference Include="Microsoft.Playwright" Version="1.35.0" />
+    <ProjectReference Include="..\AfriNetRouterLib\AfriNetRouterLib.csproj" />
   </ItemGroup>
 
 </Project>
