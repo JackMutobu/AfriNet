@@ -1,9 +1,17 @@
 ﻿using AfriNetConsoleTest;
-var homeUrl = new Uri("http://192.168.1.78/");
+using System.Text.Json;
 
-  await homeUrl.InitializePlaywrightAsync(page => 
-  page.Login(("#pcPassword", "#loginBtn"), "admin@123")
-      .Bind(page => page.GetWirelessLiveDevices(("#frame1", "#menu_wl5g", "#menu_wlstat5g", "#frame2", "#refresh", "#tlbHeadMssid"))))
-  .Match(
-      title => Console.WriteLine(title), 
-      ex =>  Console.WriteLine(ex.Message));
+var homeUrl = "http://192.168.1.78/";
+var password = "admin@123";
+
+var c50Roter = new RouterTpLinkC50Service(homeUrl, password);
+
+await c50Roter.BlockDevice("DA:06:D7:9E:94:05")
+    .Bind(_ => c50Roter.Get5GMacFilteringTable())
+    .Match(
+    devices => 
+    Console.WriteLine(JsonSerializer.Serialize(devices)),
+    exception => 
+    Console.WriteLine(exception.Message)
+    );
+Console.ReadKey();
