@@ -8,6 +8,8 @@
     }
     public record WireLessLiveDevice(string Id, string MacAddress, string ReceivedPackets, string SentPackets, string SSID) : Device(MacAddress)
     {
-        public string Band { get; set; } = WireLessNetworkBand.Unknown;
+        public string Band { get; init; } = WireLessNetworkBand.Unknown;
+
+        public DateTime CurrentTime { get; init; } = DateTime.UtcNow;
     }
 }

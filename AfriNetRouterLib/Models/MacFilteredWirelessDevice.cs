@@ -8,6 +8,8 @@
     }
     public record MacFilteredWirelessDevice(string MacAddress, string FilteringStatus, string Host, string Description) : Device(MacAddress) 
     {
-        public string Band { get; set; } = WireLessNetworkBand.Unknown;
+        public string Band { get; init; } = WireLessNetworkBand.Unknown;
+
+        public DateTime CurrentTime { get; init; } = DateTime.UtcNow;
     };
 }
