@@ -1,0 +1,9 @@
+@using ClientComponetTester.Common.Dialog
+@using ClientComponetTester.Common.Bundle
+<ModalDialog Title="@Title" DialogId="@DialogId">
+  <Bundles />
+</ModalDialog>
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = null!;
+    [Parameter, EditorRequired] public string DialogId { get; set; } = null!;
+} 

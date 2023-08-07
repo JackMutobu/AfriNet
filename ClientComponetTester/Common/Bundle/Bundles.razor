@@ -1,0 +1,16 @@
+@using ClientComponetTester.Common.Bundle
+<div class="px-2 py-1 space-y-1">
+  <div class="tabs tabs-boxed">
+    <a class="tab tab-sm tab-active">Jour</a>
+    <a class="tab tab-sm text-neutral-700">Semaine</a>
+    <a class="tab tab-sm text-neutral-700">Moi</a>
+    <a class="tab tab-sm text-neutral-700">Illimité</a>
+  </div>
+  <div class="space-y-1 overflow-y-auto">
+    @foreach (var item in Enumerable.Range(0, 5))
+    {
+      <BundleCard />
+    }
+  </div>
+</div>
+

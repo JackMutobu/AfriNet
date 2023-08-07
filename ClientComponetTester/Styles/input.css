@@ -1,0 +1,14 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-grad {
+    background-color: #FD0002;
+    opacity: 0.9;
+    background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #FD0002 15px), repeating-linear-gradient(#48484855, #484848);
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
+}

@@ -1,0 +1,28 @@
+@page "/retailer/home"
+@layout EmptyLayout
+@using ClientComponetTester.Common.Retailer
+@using ClientComponetTester.Common.Retailer.Home
+@using ClientComponetTester.Common.Retailer.Sell
+
+<PageTitle>Home Retail</PageTitle>
+<div class="relative h-screen bg-neutral-300">
+    <div>
+        <div class="fixed w-full">
+            <TopSection/>
+        </div>
+        <div class="fixed w-full top-[17.6rem]">
+            <QuickAccessSection/>
+        </div>
+        <div class="fixed w-full top-[23rem] py-1">
+            <div class="tabs">
+                <a class="tab tab-sm tab-lifted tab-active">Ventes</a> 
+                <a class="tab tab-sm tab-lifted">Commissions</a> 
+            </div>
+            <div class="overflow-y-auto">
+                <Histories/>
+            </div>
+        </div>
+    </div>
+    <BottomTabNav/>
+</div>
+<SellDialog/>

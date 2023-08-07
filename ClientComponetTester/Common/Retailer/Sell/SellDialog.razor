@@ -1,0 +1,19 @@
+
+@if(selectedStep == 0){
+    <SelectClient OnClick="@SelectBundle" Title="Choisir Client" DialogId="modal-select-client"/>
+}
+else{
+    <SelectBundle Title="Forfaits" DialogId="modal-select-bundle"/>
+}
+@code{
+    [Inject] public IJSRuntime JSRuntime {get;set;} = null!;
+
+    int selectedStep = 0;
+
+    async Task SelectBundle()
+    {
+        selectedStep = 1;
+        await JSRuntime.InvokeVoidAsync(JsConst.ClickById,"modal-select-client");
+        await JSRuntime.InvokeVoidAsync(JsConst.ClickById,"modal-select-bundle");
+    }
+}

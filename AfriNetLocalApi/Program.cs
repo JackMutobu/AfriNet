@@ -1,10 +1,12 @@
 using AfriNetLocalApi.Configuration;
 using AfriNetRouterLib;
 using AfriNetRouterLib.Interfaces;
+using FastEndpoints.Security;
 using FastEndpoints.Swagger;
 
 var builder = WebApplication.CreateBuilder();
 builder.Services.AddFastEndpoints();
+builder.Services.AddJWTBearerAuth("TokenSigningKey5");
 builder.Services.SwaggerDocument();
 builder.Services.AddSingleton(p => new AppSettings()
 {
@@ -19,6 +21,7 @@ builder.Services.AddSingleton<IRouterService>(p =>
 });
 
 var app = builder.Build();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseFastEndpoints();
 app.UseSwaggerGen();

@@ -1,0 +1,28 @@
+@page "/client/home"
+@layout EmptyLayout
+@using AfriNetSharedClientLib.Common.Client
+@using AfriNetSharedClientLib.Common.Client.Home
+@using AfriNetSharedClientLib.Common.Client.Recharge
+<PageTitle>Home Client</PageTitle>
+<div class="relative h-screen bg-neutral-300">
+    <div>
+        <div class="fixed w-full">
+            <TopSection/>
+        </div>
+        <div class="fixed w-full top-[17.6rem]">
+            <QuickAccessSection/>
+        </div>
+        <div class="fixed w-full top-[23rem]">
+            <div class="ml-2 py-1 flex items-center justify-between">
+                <h1>Dernier historique</h1>
+                <button class="btn btn-sm btn-ghost normal-case text-red-600">Plus...</button>
+            </div>
+            <div class="overflow-y-auto">
+                <Histories/>
+            </div>
+        </div>
+    </div>
+    <BottomTabNav/>
+</div>
+
+<BundlesPopup Title="Forfaits disponibles" DialogId="modal-recharge"/>

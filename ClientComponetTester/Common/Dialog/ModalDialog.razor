@@ -1,0 +1,12 @@
+<input type="checkbox" id="@DialogId" class="modal-toggle" />
+<div class="modal modal-bottom sm:modal-middle">
+  <div class="bg-neutral-300 w-full rounded-tl-lg shadow border space-y-1">
+     <TopSection Title="@Title" DialogId="@DialogId" />
+     @ChildContent
+  </div>
+</div>
+@code{
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter, EditorRequired] public string Title {get;set;}  = null!;
+    [Parameter, EditorRequired] public string DialogId {get;set;} = null!;
+}

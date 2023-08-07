@@ -1,0 +1,17 @@
+<div @onclick="@(_ => OnClick.InvokeAsync())" class="bg-neutral-100 px-2 py-1 grid grid-cols-10 gap-2 items-center rounded-sm hover:cursor-pointer hover:bg-neutral-200">
+  <div class="avatar placeholder rounded-full w-12 h-12 col-span-2 flex items-center justify-center">
+    <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
+      <span>JM</span>
+    </div>
+  </div>
+  <div class="space-y-1 text-sm col-span-5">
+    <h1 class="font-bold">Jack Mutobu</h1>
+    <p class="text-neutral-600">832939283</p>
+  </div>
+  <div class="flex items-center justify-end col-span-3">
+    <h1>09839283827</h1>
+  </div>
+</div>
+@code{
+    [Parameter] public EventCallback OnClick {get;set;}
+}

@@ -1,0 +1,18 @@
+<div class="bg-neutral-100 px-2 py-1 grid grid-cols-3 rounded-sm">
+  <div class="space-y-1 text-sm">
+    <h1 class="font-bold">1GB</h1>
+    <p class="text-neutral-600">24 Heure</p>
+  </div>
+  <div class="flex items-center justify-center">
+    <h1 class="font-extrabold">10 000 FC</h1>
+  </div>
+    @if (CanBuy)
+    {
+      <div class="flex items-center justify-end">
+        <button class="btn btn-sm btn-primary normal-case">Acheter</button>
+      </div>
+    }
+</div>
+@code {
+    [Parameter] public bool CanBuy { get; set; } = true;
+} 

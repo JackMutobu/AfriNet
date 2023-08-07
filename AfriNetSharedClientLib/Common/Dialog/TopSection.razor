@@ -1,0 +1,27 @@
+<div class="flex items-center justify-between px-2 py-1">
+  <h1 class="text-neutral-800">@Title</h1>
+  <label
+    for="@DialogId"
+    class="bg-neutral-50 rounded-full p-1 cursor-pointer hover:text-neutral-500"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-5 h-5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </label>
+</div>
+@code{
+    [Parameter, EditorRequired] public string Title {get;set;} = "Welcome";
+
+    [Parameter, EditorRequired] public string DialogId {get;set;} = "dialog";
+}

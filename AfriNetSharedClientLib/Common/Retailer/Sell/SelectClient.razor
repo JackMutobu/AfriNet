@@ -1,0 +1,23 @@
+@using AfriNetSharedClientLib.Common.Dialog
+@using AfriNetSharedClientLib.Common.Client
+
+<ModalDialog Title="@Title" DialogId="@DialogId">
+  <div class="flex px-2 space-x-2">
+    <input class="input input-bordered col-span-5 w-[84vw]" type="text" placeholder="Code ou numéro du client"/>
+    <button class="btn btn-square btn-primary col-span-2 w-[11vw]">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+      </svg>
+    </button>
+  </div>
+  <div class="px-2 space-y-1 py-1">
+    @foreach(var item in Enumerable.Range(0,5)){
+        <ClientCard OnClick="@(_ => OnClick.InvokeAsync())"/>
+    }
+  </div>
+</ModalDialog>
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = null!;
+    [Parameter, EditorRequired] public string DialogId { get; set; } = null!;
+    [Parameter] public EventCallback OnClick {get;set;}
+} 
