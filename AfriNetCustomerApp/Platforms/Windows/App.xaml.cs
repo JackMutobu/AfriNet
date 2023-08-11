@@ -16,6 +16,10 @@ namespace AfriNetCustomerApp.WinUI
         /// </summary>
         public App()
         {
+            Current.UnhandledException += (s, a) =>
+            {
+                a.Handled = true;
+            };
             this.InitializeComponent();
         }
 

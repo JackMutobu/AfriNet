@@ -23,7 +23,9 @@
                     <a class="btn btn-link normal-case block font-light text-right -mr-3.5 mt-1">Mot de passe oublié?</a>
                 </div>
                 <div class="w-full space-y-2">
-                    <button class="btn btn-primary w-full rounded-full shadow-md">Connexion</button>
+                    <button class="btn btn-primary w-full rounded-full shadow-md">
+                                <span class="@(isBusy ? "loading" : "") loading-spinner"></span>
+                        Connexion</button>
                     <p class="text-center text-neutral">Je n’ai pas de compte?<span class="btn btn-link normal-case no-underline -ml-2 -mt-1">S’inscrire</span></p>
                 </div>
             </form>
@@ -32,3 +34,6 @@
 </div>
     </div>
 </div>
+@code{
+    bool isBusy = true;
+}

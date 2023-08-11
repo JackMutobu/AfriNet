@@ -14,7 +14,6 @@ namespace AfriNetLocalApi._Features_.Router
         public override void Configure()
         {
             Get("/api/router/connected");
-            AllowAnonymous();
         }
 
         public override Task HandleAsync(CancellationToken ct)

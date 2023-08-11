@@ -30,7 +30,6 @@ namespace AfriNetLocalApi._Features_.Router
         public override void Configure()
         {
             Post("/api/router/block");
-            AllowAnonymous();
         }
 
         public override Task HandleAsync(BlockDeviceRequest req, CancellationToken ct)

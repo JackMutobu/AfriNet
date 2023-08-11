@@ -6,9 +6,9 @@ using System.Security.Claims;
 
 namespace AfriNetLocalApi._Features_.Auth
 {
-    public record LoginRequest(string Username, string Password);
+    public record LoginRequest(string Phone, string Password);
 
-    public record LoginResponse(string Token);
+    public record LoginResponse(User User, string Token);
 
     public class Login: Endpoint<LoginRequest,LoginResponse>
     {
@@ -21,13 +21,13 @@ namespace AfriNetLocalApi._Features_.Auth
 
         public override void Configure()
         {
-            Post("/api/login");
+            Post("/api/auth/login");
             AllowAnonymous();
         }
 
         public override Task HandleAsync(LoginRequest req, CancellationToken token)
-        => _authService.IsValidCrendetials(req.Username, req.Password, token).ToAsync()
-            .MatchAsync(user => SendAsync(new LoginResponse(GetToken(user))), error => this.ThrowError(error));
+        => _authService.IsValidCrendetials(req.Phone, req.Password, token).ToAsync()
+            .MatchAsync(user => SendAsync(new LoginResponse(user, GetToken(user))), error => this.ThrowError(error));
 
         static string GetToken(User user)
         {

@@ -1,0 +1,83 @@
+@page "/login"
+@page "/"
+@using AfriNetSharedClientLib.Auth.Services;
+@using System.ComponentModel.DataAnnotations;
+
+@layout EmptyLayout
+
+<div class="grid md:grid-cols-2">
+    <div class="hidden md:block h-full md:h-screen">
+        <SideSectionView />
+    </div>
+    <div class="bg-gray-100 py-5 px-2 lg:px-24 space-y-5 flex flex-col justify-center" style="max-height: 100vh;">
+        <div class="p-4 space-y-6 bg-neutral-100 h-[100vh]">
+            <div class="flex justify-center">
+                <img class="h-48" src="/images/afrinet-logo.svg" />
+            </div>
+            <div class="space-y-4 md:flex md:flex-col items-center">
+                <div class="space-y-0.5">
+                    <h2 class="text-neutral text-xl font-semibold">Connectez-vous maintenant</h2>
+                    <p class="font-extralight text-accent">Veuillez entrer les détails ci-dessous pour continuer</p>
+                </div>
+                <div class="py-2">
+                    <EditForm Model=@model OnValidSubmit=@OnLogin class="flex flex-col items-center max-w-md min-w-[22rem] space-y-2">
+                        <DataAnnotationsValidator/>
+                        <ValidationSummary />
+                        <div class="text-red-500 py-1">@errorMessage</div>
+                        <InputText @bind-Value=@model.Phone placeholder="Numéro de téléphone" class="input input-bordered w-full" />
+                        <div class="w-full">
+                            <InputText @bind-Value=@model.Password type="password" placeholder="Mot de passe" class="input input-bordered w-full" />
+                            <a class="btn btn-link normal-case block font-light text-right -mr-3.5 mt-1">Mot de passe oublié?</a>
+                        </div>
+                        <div class="w-full space-y-2">
+                            <button type="submit" class="btn btn-primary w-full rounded-full shadow-md">
+                                <span class="@(isBusy ? "loading" : "") loading-spinner"></span>
+                                Connexion</button>
+                            <p class="text-center text-neutral">Je n’ai pas de compte?<a href="signup" class="btn btn-link normal-case no-underline -ml-2 -mt-1">S’inscrire</a></p>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    LoginModel model = new LoginModel();
+    string errorMessage = string.Empty;
+    bool isBusy = false;
+
+    [Inject] IAuthService AuthService { get; set; } = null!;
+    [Inject] NavigationManager NavigationManager { get; set; } = null!;
+
+    Task<Unit> BeforeLogin()
+    {
+        isBusy = true;
+        errorMessage = string.Empty;
+        return Task.FromResult(Unit.Default);
+    }
+
+    Task<Unit> AfterLogin()
+    {
+        isBusy = false;
+        return Task.FromResult(Unit.Default);
+    }
+
+    Task<Unit> OnLogin()
+    => BeforeLogin()
+       .MapAsync(_ => GetLoginResult())
+       .MapAsync(_ => AfterLogin());
+
+    Task<Unit> GetLoginResult()
+    => AuthService.Login(model.Adapt<LoginRequest>(), string.Empty, CancellationToken.None)
+        .Where(token => !string.IsNullOrEmpty(token))
+        .Match(token => NavigationManager.NavigateTo("client/home"), ex => errorMessage = ex.Message);
+
+    class LoginModel
+    {
+        [Required(ErrorMessage = "Veuillez entrer le numéro de téléphone")]
+        public string? Phone { get; set; }
+
+        [Required(ErrorMessage = "Veuillez entrer le mot de passe")]
+        public string? Password { get; set; }
+    }
+}
