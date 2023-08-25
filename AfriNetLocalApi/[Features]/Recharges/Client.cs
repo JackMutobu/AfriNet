@@ -20,7 +20,8 @@ namespace AfriNetLocalApi._Features_.Recharges
         }
 
         public override Task HandleAsync(RechargeClientRequest req, CancellationToken ct)
-        => _rechargeService.RechargeClient(new RechargeCommand(req.ClientId, req.BundleId, req.Quantity), ct)
-            .Map(result => SendAsync(new RechargeClientResponse(result.Select(x => x.Trasaction.Id), result.Select(x => x.ActiveBundle.Id))));
+        => TryAsync(_rechargeService.RechargeClient(new RechargeCommand(req.ClientId, req.BundleId, req.Quantity), ct))
+            .Match(result => SendAsync(new RechargeClientResponse(result.Select(x => x.Trasaction.Id), result.Select(x => x.ActiveBundle.Id))),
+             error => this.ThrowError(error));
     }
 }

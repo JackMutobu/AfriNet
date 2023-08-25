@@ -3,7 +3,7 @@ using AfriNetLocalApi.Services.Bundles;
 
 namespace AfriNetLocalApi._Features_.Bundles
 {
-    public record GetRequest(int Skip, int Take, string For);
+    public record GetRequest(int Skip, int Take, string For = BundleFor.Client);
     public class BundleResponse:Bundle
     {
         public string Type { get; set; } = string.Empty;
