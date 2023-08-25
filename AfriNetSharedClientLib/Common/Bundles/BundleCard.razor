@@ -1,8 +1,9 @@
+@using AfriNetSharedClientLib.Accounts.Services;
 @using AfriNetSharedClientLib.Models;
 <div class="bg-neutral-100 px-2 py-1 grid grid-cols-3 rounded-sm">
     <div class="space-y-1 text-sm">
-        <h1 class="font-bold">@GetBundleSize()</h1>
-        <p class="text-neutral-600">@GetValidity()</p>
+        <h1 class="font-bold">@BundleService.GetBundleSize(Bundle.Type, Bundle.Data)</h1>
+        <p class="text-neutral-600">@BundleService.GetBundleValidity(Bundle.Type, Bundle.ExpiresIn)</p>
     </div>
     <div class="flex items-center justify-center">
         <h1 class="font-extrabold">@Bundle.Amount FC</h1>
@@ -10,28 +11,33 @@
     @if (CanBuy)
     {
         <div class="flex items-center justify-end">
-            <button class="btn btn-sm btn-primary normal-case">Acheter</button>
+            <button disabled="@isBusy" @onclick="@RechargeAccount" class="btn btn-sm btn-primary normal-case">
+                <span class="@(isBusy ? "loading" : "") loading-spinner"></span>
+                Acheter
+            </button>
         </div>
     }
 </div>
 @code {
+    [Inject] public IBundleService BundleService { get; set; } = null!;
+    [Inject] public IAccountService AccountService { get; set; } = null!;
+
     [Parameter] public bool CanBuy { get; set; } = true;
     [Parameter] public required Bundle Bundle { get; set; } = null!;
+    [Parameter] public Account? Account { get; set; }
+    [Parameter] public EventCallback<IEnumerable<Guid>> OnRecharge { get; set; }
 
-    string GetBundleSize()
-    => (Bundle.Type, Bundle.Data) switch
+    bool isBusy = false;
+    async Task RechargeAccount()
     {
-        (BundleType.Unlimited,_) => $"{Bundle.Data}mbps",
-        (_, >= 1024) => $"{Bundle.Data/1024}GB",
-        _ => $"{Bundle.Data}MB"
-    };
-
-    string GetValidity()
-    => (Bundle.Type, Bundle.ExpiresIn) switch
-    {
-        (BundleType.Daily, _) => $"{Bundle.ExpiresIn} heure(s)",
-        (BundleType.Monthly, _) => $"{Bundle.ExpiresIn/720} moi(s)",
-        (BundleType.Weekly, _) => $"{Bundle.ExpiresIn/168} jour(s)",
-        _ => $"{Bundle.ExpiresIn/720} moi(s)"
-    };
+        isBusy = true;
+        if(Account is not null)
+        {
+            var result = await AccountService.Recharge(Account.Id, Bundle.Id, 1, CancellationToken.None)
+                            .Match(response => response, ex => ex.ToDefault<RechargeResponse>());
+            if (result?.TransactionIds.Any() ?? false)
+                await OnRecharge.InvokeAsync(result.TransactionIds);
+        }
+        isBusy = false;
+    }
 }

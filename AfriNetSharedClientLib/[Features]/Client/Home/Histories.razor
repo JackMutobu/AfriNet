@@ -1,6 +1,48 @@
+@using AfriNetSharedClientLib.Accounts.Services;
+@using AfriNetSharedClientLib.Auth.Services;
 <div class="space-y-0.5 bg-neutral-300">
-      @foreach (var item in Enumerable.Range(0, 5))
-      {
-         <HistoryCard />
-      }
+    @foreach (var item in transactions)
+    {
+        <HistoryCard Transaction="@item" />
+    }
+    @if (isBusy)
+    {
+        <Loader/>
+    }
 </div>
+@code {
+    [Inject] IAuthService AuthService { get; set; } = null!;
+    [Inject] IAccountService AccountService { get; set; } = null!;
+
+    [Parameter] public required Account? Account { get; set; } = null;
+    [Parameter] public int UpdateRequest { get; set; } = 0;
+
+    List<Transaction> transactions = Enumerable.Empty<Transaction>().ToList();
+    int currentUpdateRequest = 0;
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if(Account is not null)
+            await LoadData();
+
+        if(Account is not null && UpdateRequest > 0 && UpdateRequest != currentUpdateRequest)
+        {
+            transactions.Clear();
+            await LoadData();
+            currentUpdateRequest = UpdateRequest;
+        }
+    }
+
+    int skip = 0;
+    int take = 5;
+    bool isBusy = true;
+    async Task LoadData()
+    {
+        isBusy = true;
+        var trans = await AccountService.GetTransactions(Account?.Id ?? Guid.Empty, skip, take, CancellationToken.None)
+                    .Match(result => result, ex => ex.ToDefault<IEnumerable<Transaction>>());
+        if (trans is not null && trans.Any())
+            transactions.AddRange(trans);
+        isBusy = false;
+    }
+}

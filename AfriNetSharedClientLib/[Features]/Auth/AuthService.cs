@@ -61,7 +61,9 @@ namespace AfriNetSharedClientLib._Features_.Auth
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
                 IsAuthenticated = true,
-                Role = user.Role
+                Role = user.Role,
+                Id = user.Id,
+                AccountId = user.AccountId
             };
             await _localStorage.SetItemAsync(AuthKeys.LocalUser, currentUser);
             return (currentUser,token);

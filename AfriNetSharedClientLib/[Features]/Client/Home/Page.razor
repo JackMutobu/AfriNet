@@ -1,5 +1,8 @@
 @page "/client/home"
 @layout EmptyLayout
+@using AfriNetSharedClientLib.Accounts.Services;
+@using AfriNetSharedClientLib.Auth.Models;
+@using AfriNetSharedClientLib.Auth.Services;
 @using AfriNetSharedClientLib._Features_.Client
 @using AfriNetSharedClientLib._Features_.Client.Home
 @using AfriNetSharedClientLib._Features_.Client.Recharge
@@ -7,10 +10,10 @@
 <div class="relative h-screen bg-neutral-300">
     <div>
         <div class="fixed w-full">
-            <TopSection/>
+            <TopSection Account="@account" CurrentUser="@currentUser" />
         </div>
         <div class="fixed w-full top-[17.6rem]">
-            <QuickAccessSection/>
+            <QuickAccessSection />
         </div>
         <div class="fixed w-full top-[23rem]">
             <div class="ml-2 py-1 flex items-center justify-between">
@@ -18,11 +21,45 @@
                 <button class="btn btn-sm btn-ghost normal-case text-red-600">Plus...</button>
             </div>
             <div class="overflow-y-auto">
-                <Histories/>
+                <Histories Account="@account" UpdateRequest="@historyUpdateRequest" />
             </div>
         </div>
     </div>
-    <BottomTabNav/>
+    <BottomTabNav />
 </div>
 
-<BundlesPopup Title="Forfaits disponibles" DialogId="modal-recharge"/>
+<BundlesPopup Title="Forfaits disponibles" DialogId="modal-recharge" Account="@account" OnRecharge="@UpdateOnRecharge" />
+@code
+{
+    [Inject] IAuthService AuthService { get; set; } = null!;
+    [Inject] IAccountService AccountService { get; set; } = null!;
+
+    CurrentUser? currentUser = null;
+    Account? account = null;
+    int historyUpdateRequest;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            currentUser = await AuthService.GetCurrentUser(CancellationToken.None)
+                            .Match(user => user, () => default(CurrentUser));
+            await LoadAccount();
+            StateHasChanged();
+        }
+    }
+
+    async Task LoadAccount()
+    {
+        if (currentUser is not null)
+        {
+            account = await AccountService.GetAccount(currentUser.AccountId, CancellationToken.None)
+                        .Match(result => result, ex => ex.ToDefault<Account>());
+        }
+    }
+
+    async Task UpdateOnRecharge(IEnumerable<Guid> transactions)
+    {
+        await LoadAccount();
+        historyUpdateRequest++;
+    }
+}

@@ -21,21 +21,21 @@
             {
                 @foreach (var item in allBundles.Where(x => x.Type == BundleType.Daily))
                 {
-                    <BundleCard Bundle="@item" />
+                    <BundleCard Bundle="@item" Account="@Account" OnRecharge="@(data => OnRecharge.InvokeAsync(data))" />
                 }
             }
             @if (currentTab == 1)
             {
                 @foreach (var item in allBundles.Where(x => x.Type == BundleType.Weekly))
                 {
-                    <BundleCard Bundle="@item" />
+                    <BundleCard Bundle="@item" Account="@Account" OnRecharge="@(data => OnRecharge.InvokeAsync(data))" />
                 }
             }
             @if (currentTab == 2)
             {
                 @foreach (var item in allBundles.Where(x => x.Type == BundleType.Monthly))
                 {
-                    <BundleCard Bundle="@item" />
+                    <BundleCard Bundle="@item" Account="@Account" OnRecharge="@(data => OnRecharge.InvokeAsync(data))" />
                 }
             }
             @if (currentTab == 3)
@@ -50,6 +50,10 @@
 </div>
 @code {
     [Inject] IBundleService BundleService { get; set; } = null!;
+
+    [Parameter] public required Account? Account { get; set; } = null;
+
+    [Parameter] public EventCallback<IEnumerable<Guid>> OnRecharge { get; set; }
 
     IEnumerable<Bundle> allBundles { get; set; } = Enumerable.Empty<Bundle>();
     bool isBusy = true;

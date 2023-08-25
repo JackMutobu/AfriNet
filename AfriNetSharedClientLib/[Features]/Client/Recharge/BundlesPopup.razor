@@ -1,9 +1,19 @@
 @using AfriNetSharedClientLib.Common.Dialog
 @using AfriNetSharedClientLib.Common.Bundles
 <ModalDialog Title="@Title" DialogId="@DialogId">
-  <Bundles />
+  <Bundles Account="@Account" OnRecharge="@NotifyRechargeAndClose"  />
 </ModalDialog>
 @code {
+    [Inject] IJSRuntime JSRuntime { get; set; } = null!;
+
     [Parameter, EditorRequired] public string Title { get; set; } = null!;
     [Parameter, EditorRequired] public string DialogId { get; set; } = null!;
+    [Parameter, EditorRequired] public required Account? Account { get; set; } = null;
+    [Parameter] public EventCallback<IEnumerable<Guid>> OnRecharge { get; set; }
+
+    async Task NotifyRechargeAndClose(IEnumerable<Guid> transactions)
+    {
+        await OnRecharge.InvokeAsync(transactions);
+        await JSRuntime.InvokeVoidAsync(JsConst.ClickById, DialogId);
+    }
 } 

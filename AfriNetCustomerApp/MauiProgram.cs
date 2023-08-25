@@ -1,6 +1,7 @@
 ﻿using AfriNetCustomerApp.Services;
 using AfriNetSharedClientLib;
 using AfriNetSharedClientLib._Features_.Auth;
+using AfriNetSharedClientLib.Accounts.Services;
 using AfriNetSharedClientLib.Auth.Services;
 using AfriNetSharedClientLib.Common.Bundles;
 using Blazored.LocalStorage;
@@ -27,6 +28,7 @@ namespace AfriNetCustomerApp
 
             builder.Services.AddTransient<IAuthService, AuthService>();
             builder.Services.AddTransient<IBundleService, BundleService>();
+            builder.Services.AddTransient<IAccountService, AccountService>();
             builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
 #if WINDOWS
             var baseAdress = "https://localhost:44397/api/";

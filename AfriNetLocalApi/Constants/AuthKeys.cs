@@ -15,5 +15,6 @@
     public class AccountKeys
     {
         public const string DefaultRetailAccountId = "d3d0a5cb-653c-496d-a188-2eaef509dfee";
+        public const string Company = "Afrisoft";
     }
 }

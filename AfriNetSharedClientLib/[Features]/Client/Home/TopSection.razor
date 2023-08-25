@@ -1,6 +1,7 @@
 @using AfriNetSharedClientLib.Auth.Models;
-@using AfriNetSharedClientLib.Auth.Services;
-@if (currentUser is not null)
+@using AfriNetSharedClientLib.Common.Bundles;
+@using AfriNetSharedClientLib.Models;
+@if (CurrentUser is not null)
 {
     <div class="relative">
         <div class="bg-red-700 h-full relative z-10">
@@ -9,7 +10,7 @@
                     <img class="h-14" src="/images/afrinet-logo.svg" />
                     <div class="py-1 text-neutral-100 space-y-1">
                         <h2>Content de te revoir,</h2>
-                        <h1 class="text-lg font-semibold">@currentUser.Fullname</h1>
+                        <h1 class="text-lg font-semibold">@CurrentUser.Fullname</h1>
                     </div>
                 </div>
                 <div class="bg-red-700 h-20">
@@ -22,7 +23,7 @@
                 <div class="text-neutral-100">
                     <h1 class="text-lg">Forfait en cours</h1>
                     <h2 class="text-sm font-light">
-                        Code Client: <span class="font-medium">@currentUser.Phone</span>
+                        Code Client: <span class="font-medium">@CurrentUser.Phone</span>
                     </h2>
                 </div>
                 <div>
@@ -41,30 +42,34 @@
                 </div>
             </div>
             <div class="h-[1px] w-full bg-neutral-100"></div>
-            <div class="px-2 py-2 text-neutral-100">
-                <h1 class="text-lg font-semibold">1GB</h1>
-                <h2 class="text-sm font-light">
-                    Valide jusqu’au 04/10/2023 à 13h30
-                </h2>
-            </div>
+            @if (Account is not null)
+            {
+                <div class="px-2 py-2 text-neutral-100">
+                    <h1 class="text-lg font-semibold">@BundleService.GetBundleSize(string.Empty, Account.Balance)</h1>
+                    <h2 class="text-sm font-light">
+                        Valide jusqu’au @Account.ExpiresAt.ToLocalTime().ToShortDateString() à @Account.ExpiresAt.ToLocalTime().ToShortTimeString()
+                    </h2>
+                </div>
+            }
+            else
+            {
+                <Loader />
+            }
         </div>
     </div>
+}
+else
+{
+    <Loader />
 }
 
 @code
 {
-    [Inject] IAuthService AuthService { get; set; } = null!;
 
-    CurrentUser? currentUser = null;
+    [Inject] IBundleService BundleService { get; set; } = null!;
 
-    protected async override Task OnAfterRenderAsync(bool firstrender)
-    {
-        if (firstrender)
-        {
-            currentUser = await AuthService.GetCurrentUser(CancellationToken.None)
-                            .Match(user => user, () => default(CurrentUser));
-            StateHasChanged();
-        }
-    }
+    [Parameter] public required CurrentUser? CurrentUser { get; set; } = null;
+    [Parameter] public required Account? Account { get; set; } = null;
+
 }
 

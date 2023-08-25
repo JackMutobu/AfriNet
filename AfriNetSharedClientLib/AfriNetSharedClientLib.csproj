@@ -25,7 +25,6 @@
     <Folder Include="Models\Responses\" />
     <Folder Include="Pages\Retailer\" />
     <Folder Include="Services\" />
-    <Folder Include="[Features]\Client\Interfaces\" />
   </ItemGroup>
 
 </Project>
