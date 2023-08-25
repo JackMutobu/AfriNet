@@ -3,6 +3,7 @@ using System;
 using AfriNetLocalApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AfriNetLocalApi.Migrations
 {
     [DbContext(typeof(AfriNetLocalDbContext))]
-    partial class AfriNetLocalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230825085734_UpdateBundle")]
+    partial class UpdateBundle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -45,17 +48,9 @@ namespace AfriNetLocalApi.Migrations
                         {
                             Id = new Guid("2301d884-221a-4e7d-b509-0113dcc043e1"),
                             Balance = 0m,
-                            CreatedAt = new DateTime(2023, 8, 25, 12, 29, 50, 103, DateTimeKind.Utc).AddTicks(7221),
+                            CreatedAt = new DateTime(2023, 8, 25, 8, 57, 33, 971, DateTimeKind.Utc).AddTicks(6716),
                             Type = "Dealer",
-                            UpdatedAt = new DateTime(2023, 8, 25, 12, 29, 50, 103, DateTimeKind.Utc).AddTicks(7251)
-                        },
-                        new
-                        {
-                            Id = new Guid("d3d0a5cb-653c-496d-a188-2eaef509dfee"),
-                            Balance = 0m,
-                            CreatedAt = new DateTime(2023, 8, 25, 12, 29, 50, 103, DateTimeKind.Utc).AddTicks(7324),
-                            Type = "Retailer",
-                            UpdatedAt = new DateTime(2023, 8, 25, 12, 29, 50, 103, DateTimeKind.Utc).AddTicks(7327)
+                            UpdatedAt = new DateTime(2023, 8, 25, 8, 57, 33, 971, DateTimeKind.Utc).AddTicks(6742)
                         });
                 });
 
@@ -151,10 +146,6 @@ namespace AfriNetLocalApi.Migrations
                     b.Property<int>("ExpiresIn")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("For")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("IsUnlimited")
                         .HasColumnType("INTEGER");
 
@@ -222,24 +213,12 @@ namespace AfriNetLocalApi.Migrations
                         {
                             Id = new Guid("198e6aea-6827-4562-b415-242146de9b9b"),
                             AccountId = new Guid("2301d884-221a-4e7d-b509-0113dcc043e1"),
-                            CreatedAt = new DateTime(2023, 8, 25, 12, 29, 50, 103, DateTimeKind.Utc).AddTicks(7297),
+                            CreatedAt = new DateTime(2023, 8, 25, 8, 57, 33, 971, DateTimeKind.Utc).AddTicks(6914),
                             Firstname = "Jack",
                             Lastname = "Mutobu Nzanzu",
                             PasswordHash = "Test@243",
                             Phone = "0997186014",
                             Role = "superadmin",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("e860d79d-18e5-4d70-93e6-6a09a21dc6ff"),
-                            AccountId = new Guid("d3d0a5cb-653c-496d-a188-2eaef509dfee"),
-                            CreatedAt = new DateTime(2023, 8, 25, 12, 29, 50, 103, DateTimeKind.Utc).AddTicks(7347),
-                            Firstname = "Retailer",
-                            Lastname = "Default",
-                            PasswordHash = "Test@243",
-                            Phone = "0997186015",
-                            Role = "retailer",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });

@@ -1,0 +1,72 @@
+@using AfriNetSharedClientLib.Common.Bundles
+@using AfriNetSharedClientLib.Models;
+@using AfriNetSharedClientLib.Models.Requests;
+
+<div class="px-2 py-1 space-y-1">
+    <div class="tabs tabs-boxed">
+        <a @onclick="@(_ => GoToTab(0))" class="tab tab-sm @(currentTab == 0 ? "tab-active" : "text-neutral-700")">Jour</a>
+        <a @onclick="@(_ => GoToTab(1))" class="tab tab-sm @(currentTab == 1 ? "tab-active" : "text-neutral-700")">Semaine</a>
+        <a @onclick="@(_ => GoToTab(2))" class="tab tab-sm @(currentTab == 2 ? "tab-active" : "text-neutral-700")">Moi</a>
+        <a @onclick="@(_ => GoToTab(3))" class="tab tab-sm @(currentTab == 3 ? "tab-active" : "text-neutral-700")">Illimité</a>
+    </div>
+    <div class="space-y-1 overflow-y-auto min-h-[10rem]">
+        @if (isBusy)
+        {
+            <Loader />
+        }
+        else
+        {
+
+            @if (currentTab == 0)
+            {
+                @foreach (var item in allBundles.Where(x => x.Type == BundleType.Daily))
+                {
+                    <BundleCard Bundle="@item" />
+                }
+            }
+            @if (currentTab == 1)
+            {
+                @foreach (var item in allBundles.Where(x => x.Type == BundleType.Weekly))
+                {
+                    <BundleCard Bundle="@item" />
+                }
+            }
+            @if (currentTab == 2)
+            {
+                @foreach (var item in allBundles.Where(x => x.Type == BundleType.Monthly))
+                {
+                    <BundleCard Bundle="@item" />
+                }
+            }
+            @if (currentTab == 3)
+            {
+                @foreach (var item in allBundles.Where(x => x.Type == BundleType.Unlimited))
+                {
+                    <BundleCard Bundle="@item" />
+                }
+            }
+        }
+    </div>
+</div>
+@code {
+    [Inject] IBundleService BundleService { get; set; } = null!;
+
+    IEnumerable<Bundle> allBundles { get; set; } = Enumerable.Empty<Bundle>();
+    bool isBusy = true;
+
+    protected async override Task OnInitializedAsync()
+    {
+        isBusy = true;
+        allBundles = await BundleService.GetBundles(new PaginationRequest(0, 20), CancellationToken.None)
+                     .Match(bundles => bundles, ex => Enumerable.Empty<Bundle>());
+        isBusy = false;
+    }
+
+    int currentTab = 0;
+    void GoToTab(int tab)
+    {
+        currentTab = tab;
+    }
+
+}
+

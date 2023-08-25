@@ -28,7 +28,7 @@ namespace AfriNetLocalApi._Features_.Auth
         public override Task HandleAsync(SingupRequest req, CancellationToken token)
        => _accountService.Create(Account.Default(GetAccountType(req.User.Role)), token)
            .MapAsync(account => _authService.CreateUser(req.User, req.Password,account.Id, token))
-           .Map(user => SendAsync(new SingupResponse(user)));
+           .Map(user => SendAsync(new SingupResponse(user), 201));
 
         static string GetAccountType(string userRole)
             => userRole switch

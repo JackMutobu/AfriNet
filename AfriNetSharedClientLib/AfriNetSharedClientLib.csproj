@@ -1,4 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿
+
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -22,6 +24,8 @@
   <ItemGroup>
     <Folder Include="Models\Responses\" />
     <Folder Include="Pages\Retailer\" />
+    <Folder Include="Services\" />
+    <Folder Include="[Features]\Client\Interfaces\" />
   </ItemGroup>
 
 </Project>

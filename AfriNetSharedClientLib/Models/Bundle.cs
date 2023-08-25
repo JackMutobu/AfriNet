@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace AfriNetLocalApi.Entities
+﻿namespace AfriNetSharedClientLib.Models
 {
     public class BundleType
     {
@@ -9,15 +7,12 @@ namespace AfriNetLocalApi.Entities
         public const string Monthly = nameof(Monthly);
         public const string Unlimited = nameof(Unlimited);
     }
-    public class BundleFor
-    {
-        public const string Retailer = nameof(Retailer);
-        public const string Dealer = nameof(Dealer);
-        public const string Client = nameof(Client);
-    }
-    public class Bundle:IBaseEntity
+
+    public class Bundle
     {
         public Guid Id { get; set; }
+
+        public string Type { get; set; } = string.Empty;
 
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
@@ -28,16 +23,12 @@ namespace AfriNetLocalApi.Entities
         //In MB
         public decimal Data { get; set; }
 
-        //In Hours
+        //In Days
         public int ExpiresIn { get; set; }
 
         public bool IsUnlimited { get; set; }
 
-        public string For { get; set; } = BundleFor.Client;
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
-
-        public ICollection<AccountTransaction> Transactions { get; set; } = new Collection<AccountTransaction>();
     }
 }

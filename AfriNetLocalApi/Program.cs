@@ -1,5 +1,6 @@
 using AfriNetLocalApi.Configuration;
 using AfriNetLocalApi.Constants;
+using AfriNetLocalApi.Recharges.Services;
 using AfriNetLocalApi.Services.Accounts;
 using AfriNetLocalApi.Services.Auth;
 using AfriNetLocalApi.Services.Bundles;
@@ -37,6 +38,7 @@ builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<IBundleService, BundleService>();
+builder.Services.AddTransient<IRechargeService, RechargeService>();
 
 var app = builder.Build();
 

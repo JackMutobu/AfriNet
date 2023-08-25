@@ -14,6 +14,7 @@ namespace AfriNetLocalApi._Features_.Bundles
         public decimal Data { get; set; }
         public int ExpiresIn { get; set; }
         public bool IsUnlimited { get; set; }
+        public string For { get; set; } = BundleFor.Client;
     }
 
     public record BundleRequst(BundleDto Bundle);
@@ -33,6 +34,6 @@ namespace AfriNetLocalApi._Features_.Bundles
 
         public override Task HandleAsync(BundleRequst req, CancellationToken ct)
         => _bundleService.Create(req.Bundle.Adapt<Bundle>(), ct)
-            .Map(_ => SendAsync(new SuccessResponse("Bundle created")));
+            .Map(_ => SendAsync(new SuccessResponse("Bundle created"), 201));
     }
 }

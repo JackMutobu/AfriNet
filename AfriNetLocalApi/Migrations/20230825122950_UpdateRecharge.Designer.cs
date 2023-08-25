@@ -3,6 +3,7 @@ using System;
 using AfriNetLocalApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AfriNetLocalApi.Migrations
 {
     [DbContext(typeof(AfriNetLocalDbContext))]
-    partial class AfriNetLocalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230825122950_UpdateRecharge")]
+    partial class UpdateRecharge
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");

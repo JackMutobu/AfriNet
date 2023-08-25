@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Routers", "Routers", "{5D82
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientComponetTester", "ClientComponetTester\ClientComponetTester.csproj", "{0B5822A6-B3F5-44DA-8059-E3B1EDDC8879}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AfriNetCustomerApp", "AfriNetCustomerApp\AfriNetCustomerApp.csproj", "{335E8F86-F3A9-4F9E-951C-D9EA0F343099}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AfriNetCustomerApp", "AfriNetCustomerApp\AfriNetCustomerApp.csproj", "{335E8F86-F3A9-4F9E-951C-D9EA0F343099}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

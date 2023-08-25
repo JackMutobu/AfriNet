@@ -7,6 +7,7 @@ using AfriNetSharedClientLib.Models;
 namespace AfriNetSharedClientLib._Features_.Auth
 {
     public record LoginRequest(string Phone, string Password);
+    public record SignupRequest(User User, string Password);
     public record Token(string Value);
     public class AuthService : IAuthService
     {
@@ -39,6 +40,15 @@ namespace AfriNetSharedClientLib._Features_.Auth
             .MapAsync(response => response.Deserialize<LoginResponse>())
             .MapAsync(result => SaveToLocalStorage(result!.User,result.Token))
             .Map(result => result.token));
+
+        record SignupResponse(User User);
+
+        public TryAsync<User> Signup(SignupRequest request, CancellationToken cancellationToken)
+        => TryAsync(
+            _httpClient.PostAsJsonAsync("auth/signup", request, cancellationToken)
+            .Bind(result => result.ToHttpResult())
+            .MapAsync(response => response.Deserialize<SignupResponse>())
+            .Map(result => result!.User));
 
         private async Task<(CurrentUser user, string token)> SaveToLocalStorage(User user, string token)
         {

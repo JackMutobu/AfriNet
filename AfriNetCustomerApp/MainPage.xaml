@@ -11,5 +11,4 @@
             <RootComponent Selector="#app" ComponentType="{x:Type lib:Main}" />
         </BlazorWebView.RootComponents>
     </BlazorWebView>
-
 </ContentPage>

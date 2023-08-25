@@ -1,4 +1,6 @@
 @page "/signup"
+@using System.ComponentModel.DataAnnotations;
+@using AfriNetSharedClientLib.Auth.Services;
 @layout EmptyLayout
 
 <div class="grid md:grid-cols-2">
@@ -31,3 +33,49 @@
 </div>
     </div>
 </div>
+@code{
+    SignupModel model = new SignupModel();
+    string errorMessage = string.Empty;
+    bool isBusy = false;
+
+    [Inject] IAuthService AuthService { get; set; } = null!;
+    [Inject] NavigationManager NavigationManager { get; set; } = null!;
+
+    Task<Unit> BeforeLogin()
+    {
+        isBusy = true;
+        errorMessage = string.Empty;
+        return Task.FromResult(Unit.Default);
+    }
+
+    Task<Unit> AfterLogin()
+    {
+        isBusy = false;
+        return Task.FromResult(Unit.Default);
+    }
+
+    Task<Unit> OnLogin()
+    => BeforeLogin()
+       .MapAsync(_ => GetLoginResult())
+       .MapAsync(_ => AfterLogin());
+
+    Task<Unit> GetLoginResult()
+    => AuthService.Login(model.Adapt<LoginRequest>(), string.Empty, CancellationToken.None)
+        .Where(token => !string.IsNullOrEmpty(token))
+        .Match(token => NavigationManager.NavigateTo("client/home"), ex => errorMessage = ex.Message);
+
+    class SignupModel
+    {
+        [Required(ErrorMessage = "Veuillez entrer le prénom")]
+        public string? Firstname { get; set; }
+
+        [Required(ErrorMessage = "Veuillez entrer le postnom")]
+        public string? Lastname { get; set; }
+
+        [Required(ErrorMessage = "Veuillez entrer le numéro de téléphone")]
+        public string? Phone { get; set; }
+
+        [Required(ErrorMessage = "Veuillez entrer le mot de passe")]
+        public string? Password { get; set; }
+    }
+}

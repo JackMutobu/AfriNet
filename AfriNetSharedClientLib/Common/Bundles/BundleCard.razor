@@ -1,0 +1,37 @@
+@using AfriNetSharedClientLib.Models;
+<div class="bg-neutral-100 px-2 py-1 grid grid-cols-3 rounded-sm">
+    <div class="space-y-1 text-sm">
+        <h1 class="font-bold">@GetBundleSize()</h1>
+        <p class="text-neutral-600">@GetValidity()</p>
+    </div>
+    <div class="flex items-center justify-center">
+        <h1 class="font-extrabold">@Bundle.Amount FC</h1>
+    </div>
+    @if (CanBuy)
+    {
+        <div class="flex items-center justify-end">
+            <button class="btn btn-sm btn-primary normal-case">Acheter</button>
+        </div>
+    }
+</div>
+@code {
+    [Parameter] public bool CanBuy { get; set; } = true;
+    [Parameter] public required Bundle Bundle { get; set; } = null!;
+
+    string GetBundleSize()
+    => (Bundle.Type, Bundle.Data) switch
+    {
+        (BundleType.Unlimited,_) => $"{Bundle.Data}mbps",
+        (_, >= 1024) => $"{Bundle.Data/1024}GB",
+        _ => $"{Bundle.Data}MB"
+    };
+
+    string GetValidity()
+    => (Bundle.Type, Bundle.ExpiresIn) switch
+    {
+        (BundleType.Daily, _) => $"{Bundle.ExpiresIn} heure(s)",
+        (BundleType.Monthly, _) => $"{Bundle.ExpiresIn/720} moi(s)",
+        (BundleType.Weekly, _) => $"{Bundle.ExpiresIn/168} jour(s)",
+        _ => $"{Bundle.ExpiresIn/720} moi(s)"
+    };
+}

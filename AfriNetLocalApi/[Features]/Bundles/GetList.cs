@@ -3,7 +3,7 @@ using AfriNetLocalApi.Services.Bundles;
 
 namespace AfriNetLocalApi._Features_.Bundles
 {
-    public record GetRequest(int Skip, int Take);
+    public record GetRequest(int Skip, int Take, string For);
     public class BundleResponse:Bundle
     {
         public string Type { get; set; } = string.Empty;
@@ -23,7 +23,7 @@ namespace AfriNetLocalApi._Features_.Bundles
 
         public override Task HandleAsync(GetRequest req, CancellationToken ct)
         => _bundleService.GetList(req.Skip, req.Take, ct)
-            .Map(bundles => SendAsync(bundles.Select(x => GetBundleResponse(x))));
+            .Map(bundles => SendAsync(bundles.Where(x => string.IsNullOrEmpty(req.For) || x.For == req.For).Select(x => GetBundleResponse(x))));
 
         static BundleResponse GetBundleResponse(Bundle bundle)
         {

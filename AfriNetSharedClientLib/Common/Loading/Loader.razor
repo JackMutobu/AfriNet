@@ -1,0 +1,6 @@
+﻿<div class="@(ShowPadding ? "py-10" : "") flex items-center justify-center">
+    <span class="loading loading-bars loading-lg"></span>
+</div>
+@code {
+    [Parameter] public bool ShowPadding { get; set; } = true;
+}

@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "tailwind": "npx tailwindcss -i ./Styles/input.css -o ./wwwroot/css/output.css --watch"
+    "tailwind": "npx tailwindcss -i ./Styles/input.css -o ./wwwroot/css/output.css --watch",
+    "build": "npx tailwindcss -i ./Styles/input.css -o ../AfriNetSharedClientLib/wwwroot/css/output.css"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
