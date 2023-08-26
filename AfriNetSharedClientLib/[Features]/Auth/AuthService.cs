@@ -7,7 +7,7 @@ using AfriNetSharedClientLib.Models;
 namespace AfriNetSharedClientLib._Features_.Auth
 {
     public record LoginRequest(string Phone, string Password);
-    public record SignupRequest(User User, string Password);
+    public record SignupRequest(SignupUserRequest User, string Password);
     public record Token(string Value);
     public class AuthService : IAuthService
     {

@@ -5,8 +5,20 @@ using AfriNetLocalApi.Services.Auth;
 
 namespace AfriNetLocalApi._Features_.Auth
 {
-    public record SingupRequest(User User, string Password);
-
+    public class UserRequest
+    {
+        public Guid Id { get; set; }
+        public string Firstname { get; set; } = null!;
+        public string Lastname { get; set; } = string.Empty;
+        public string? Email { get; set; }
+        public string Phone { get; set; } = null!;
+        public string PasswordHash { get; set; } = "";
+        public string Role { get; set; } = AuthKeys.Roles.Guest;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; }
+        public Guid AccountId { get; set; }
+    }
+    public record SingupRequest(UserRequest User, string Password);
     public record SingupResponse(User User);
     public class Signup: Endpoint<SingupRequest, SingupResponse>
     {
@@ -27,7 +39,7 @@ namespace AfriNetLocalApi._Features_.Auth
 
         public override Task HandleAsync(SingupRequest req, CancellationToken token)
        => _accountService.Create(Account.Default(GetAccountType(req.User.Role)), token)
-           .MapAsync(account => _authService.CreateUser(req.User, req.Password,account.Id, token))
+           .MapAsync(account => _authService.CreateUser(req.User.Adapt<User>(), req.Password,account.Id, token))
            .Map(user => SendAsync(new SingupResponse(user), 201));
 
         static string GetAccountType(string userRole)

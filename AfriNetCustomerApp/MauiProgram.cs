@@ -33,7 +33,7 @@ namespace AfriNetCustomerApp
 #if WINDOWS
             var baseAdress = "https://localhost:44397/api/";
 #else   
-            var baseAdress = "https://192.168.1.71:45455/api/";
+            var baseAdress = "https://192.168.1.71:45456/api/";
 #endif
             builder.Services.AddScoped(_ =>
             {
